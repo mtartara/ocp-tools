@@ -4,7 +4,7 @@ GREEN='\033[0;32m'
 # https://access.redhat.com/solutions/5925951
 
 echo "################################"
-echo -e "${GREEN} ##### API"
+echo -e "\033[32m##### API033[0m"
 
 echo "## External API"
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
