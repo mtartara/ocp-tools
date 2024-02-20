@@ -6,29 +6,29 @@ echo "################################"
 echo "##### API"
 echo -en "external-loadbalancer-serving-certkey secret in openshift-kube-apiserver project --> "
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-echo "---------------------"
 echo -en "internal-loadbalancer-serving-certkey secret in openshift-kube-apiserver project --> "
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+echo "---------------------"
 
-echo ""
+echo -e "\n"
 echo "################################"
 echo  "##### Kube Controller Manager"
 echo -en "kube-scheduler-client-cert-key secret in openshift-kube-controller-manager project --> "
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-echo "---------------------"
 echo -en "serving-cert secret in openshift-kube-controller-manager project --> "
 oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+echo "---------------------"
 
-echo ""
+echo -e "\n"
 echo "################################"
 echo  "##### Kube Scheduler"
 echo -en "kube-scheduler-client-cert-key secret in openshift-kube-scheduler project --> "
 oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-echo "---------------------"
 echo -en "serving-cert secret in openshift-kube-scheduler project --> "
 oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+echo "---------------------"
 
-echo ""
+echo -e "\n"
 echo "################################"
 echo  "##### ETCD Certificates #####"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
@@ -38,10 +38,11 @@ for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ 
   oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
   echo -en "etcd-serving-metrics-$master secret -->  "
   oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-  echo -e "---------------------\n"
+  echo -e "\n"
 done
+echo "---------------------"
 
-echo ""
+echo -e "\n"
 echo "################################"
 echo  "##### Node Certificates #####"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
