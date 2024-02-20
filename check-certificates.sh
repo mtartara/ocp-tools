@@ -5,6 +5,7 @@ GREEN='\033[0;32m'
 
 echo "################################"
 echo -e "${GREEN} ##### API"
+
 echo "## External API"
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 echo "---------------------"
@@ -13,6 +14,7 @@ oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey 
 
 echo "################################"
 echo -e "${GREEN} ##### Kube Controller Manager"
+
 echo "## Client certificate"
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 echo "---------------------"
