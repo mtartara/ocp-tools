@@ -31,10 +31,10 @@ echo "##### ETCD Certificates"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
   echo "## Node: $master";
   echo "# etcd-peer-$master certificate";
-  oc get secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates;
+  oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates;
   echo "# etcd-serving-$master certificate";
-  oc get secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates;
+  oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates;
   echo "# etcd-serving-metrics-$master certificate";
-  oc get secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates;
+  oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates;
   echo "---------------------";
 done
