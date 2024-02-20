@@ -32,13 +32,12 @@ echo -e "\n"
 echo "################################"
 echo  "##### ETCD Certificates #####"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
-  echo -en "etcd-peer-$master secret  -->  "
+  echo -en "etcd-peer-$master secret in openshift-etcd -->  "
   oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-  echo -en "etcd-serving-$master secret  -->  "
+  echo -en "etcd-serving-$master secret in openshift-etcd -->  "
   oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-  echo -en "etcd-serving-metrics-$master secret -->  "
+  echo -en "etcd-serving-metrics-$master secret in openshift-etcd -->  "
   oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-  echo -e "\n"
 done
 echo "---------------------"
 
