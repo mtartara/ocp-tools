@@ -3,7 +3,7 @@
 # https://access.redhat.com/solutions/5925951
 
 echo "################################"
-echo -e "\033[32m##### API0\33[0m"
+echo -e "\033[32m ##### API\33[0m"
 
 echo "## External API"
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
