@@ -52,7 +52,6 @@ for node in $(oc get nodes -oname|cut -d/ -f2); do
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate -dateopt iso_8601
   echo -en "kubelet-server-current expires ->  "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -enddate -dateopt iso_8601
-  echo -e "\n"
 done
 echo "---------------------"
 
