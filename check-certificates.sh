@@ -48,9 +48,9 @@ echo  "##### Node Certificates"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
   echo "## Node: $node";
   echo "# kubelet-client-current";
-  ssh "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -dates;
+  ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -dates;
   echo "# kubelet-server-current";
-  ssh "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -dates;
+  ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -dates;
   sleep 1;
   echo "---------------------";
 done
