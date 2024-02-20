@@ -4,10 +4,11 @@
 
 RED='\033[0;31m'
 NC='\033[0m' # No Color
+GREEN='\033[0;32m'
 
 echo "################################"
 echo "##### API"
-echo -en "${RED}external-loadbalancer-serving-certkey${NC} secret in openshift-kube-apiserver project expires -> "
+echo -en "${RED}external-loadbalancer-serving-certkey${NC} ${GREEN}secret${NC} in openshift-kube-apiserver project expires -> "
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
 echo -en "internal-loadbalancer-serving-certkey secret in openshift-kube-apiserver project expires -> "
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
