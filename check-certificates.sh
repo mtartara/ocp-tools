@@ -48,10 +48,17 @@ echo  "##### Node Certificates #####"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
   #echo "## Node: $node";
   echo "------------- node: $node -------------"
-  echo -en "kubelet-client-current  expires ->  "
+  echo -en "kubelet-client-current expires ->  "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate -dateopt iso_8601
-  echo -en "kubelet-server-current  expires ->  "
+  echo -en "kubelet-server-current expires ->  "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -enddate -dateopt iso_8601
   echo -e "\n"
 done
+echo "---------------------"
 
+echo -e "\n"
+echo "################################"
+echo  "##### Ingress Certificates #####"
+echo -en "router-certs-default secret inopenshift-ingress project expires ->  "
+oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | openssl x509 -noout -dates -dateopt iso_8601
+echo "---------------------"
