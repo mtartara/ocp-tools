@@ -10,15 +10,16 @@ echo "---------------------"
 echo "## Internal API"
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 
+echo ""
 echo "################################"
 echo  "##### Kube Controller Manager"
-
 echo "## Client certificate"
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 echo "---------------------"
 echo "## Server certificate"
 oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 
+echo ""
 echo "################################"
 echo  "##### Kube Scheduler"
 echo "## Client certificate"
@@ -27,6 +28,7 @@ echo "---------------------"
 echo "# Server certificate"
 oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 
+echo ""
 echo "################################"
 echo  "##### ETCD Certificates"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
@@ -40,6 +42,7 @@ for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ 
   echo "---------------------";
 done
 
+echo ""
 echo "################################"
 echo  "##### Node Certificates"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
