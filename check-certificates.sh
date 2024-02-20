@@ -59,5 +59,5 @@ echo -e "\n"
 echo "################################"
 echo  "##### Ingress Certificates #####"
 echo -en "router-certs-default secret inopenshift-ingress project expires ->  "
-oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | openssl x509 -noout -dates -dateopt iso_8601
+oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
 echo "---------------------"
