@@ -1,9 +1,10 @@
 #!/bin/bash
+GREEN='\033[0;32m'
 
 # https://access.redhat.com/solutions/5925951
 
 echo "################################"
-echo "##### API"
+echo -e "${GREEN} ##### API"
 echo "## External API"
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 echo "---------------------"
@@ -11,7 +12,7 @@ echo "## Internal API"
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 
 echo "################################"
-echo "##### Kube Controller Manager"
+echo -e "${GREEN} ##### Kube Controller Manager"
 echo "## Client certificate"
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 echo "---------------------"
@@ -19,7 +20,7 @@ echo "## Server certificate"
 oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 
 echo "################################"
-echo "##### Kube Scheduler"
+echo -e "${GREEN} ##### Kube Scheduler"
 echo "## Client certificate"
 oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 echo "---------------------"
@@ -27,7 +28,7 @@ echo "# Server certificate"
 oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates
 
 echo "################################"
-echo "##### ETCD Certificates"
+echo -e "${GREEN} ##### ETCD Certificates"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
   echo "## Node: $master";
   echo "# etcd-peer-$master certificate";
@@ -40,12 +41,13 @@ for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ 
 done
 
 echo "################################"
-echo "##### Node Certificates"
+echo -e "${GREEN} ##### Node Certificates"
 for node in $(oc get nodes -oname); do
   echo "## Node: $node";
   echo "# kubelet-client-current";
-  oc debug -q "$node" -- chroot /host openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -dates
+  oc debug -q "$node" -- chroot /host openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -dates;
   echo "# kubelet-server-current";
-  oc debug -q "$node" -- chroot /host openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -dates
+  oc debug -q "$node" -- chroot /host openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -dates;
+  sleep 1;
   echo "---------------------";
 done
