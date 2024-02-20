@@ -38,6 +38,7 @@ for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ 
   oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
   echo -en "etcd-serving-metrics-$master secret in openshift-etcd -->  "
   oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+  echo "----"
 done
 echo "---------------------"
 
