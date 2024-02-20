@@ -22,32 +22,31 @@ oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-column
 echo ""
 echo "################################"
 echo  "##### Kube Scheduler"
-echo "## Client certificate"
+echo -en "kube-scheduler-client-cert-key secret in openshift-kube-scheduler project --> "
 oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate
 echo "---------------------"
-echo "# Server certificate"
+echo -en "serving-cert secret in openshift-kube-scheduler project --> "
 oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate
 
 echo ""
 echo "################################"
-echo  "##### ETCD Certificates"
+echo  "##### ETCD Certificates #####"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
-  #echo "## Node: $master";
-  echo -en "etcd-peer-$master certificate  -->  ";
+  echo -en "etcd-peer-$master secret  -->  ";
   oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate;
-  echo -en "etcd-serving-$master certificate  -->  ";
+  echo -en "etcd-serving-$master secret  -->  ";
   oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate;
-  echo -en "etcd-serving-metrics-$master certificate -->  ";
+  echo -en "etcd-serving-metrics-$master secret -->  ";
   oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate;
   echo -e "---------------------\n";
 done
 
 echo ""
 echo "################################"
-echo  "##### Node Certificates"
+echo  "##### Node Certificates #####"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
   #echo "## Node: $node";
-  echo "------------- NODE: $node -------------"
+  echo "------------- node: $node -------------"
   echo -en "kubelet-client-current  -->  "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate
   echo -en "kubelet-server-current  -->  "
