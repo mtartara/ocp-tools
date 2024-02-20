@@ -8,27 +8,27 @@ GREEN='\033[0;32m'
 
 echo "################################"
 echo "##### API"
-echo -en "external-loadbalancer-serving-certkey$ ${GREEN}secret${NC} in openshift-kube-apiserver project expires -> "
+echo -en "external-loadbalancer-serving-certkey$ ${GREEN}secret${NC} in openshift-kube-apiserver ${GREEN}project${NC} expires -> "
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-echo -en "internal-loadbalancer-serving-certkey ${GREEN}secret${NC} in openshift-kube-apiserver project expires -> "
+echo -en "internal-loadbalancer-serving-certkey ${GREEN}secret${NC} in openshift-kube-apiserver ${GREEN}project${NC} expires -> "
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
 echo "---------------------"
 
 echo -e "\n"
 echo "################################"
 echo  "##### Kube Controller Manager"
-echo -en "kube-scheduler-client-cert-key ${GREEN}secret${NC} in openshift-kube-controller-manager project expires -> "
+echo -en "kube-scheduler-client-cert-key ${GREEN}secret${NC} in openshift-kube-controller-manager ${GREEN}project${NC} expires -> "
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-echo -en "serving-cert ${GREEN}secret${NC} in openshift-kube-controller-manager project expires -> "
+echo -en "serving-cert ${GREEN}secret${NC} in openshift-kube-controller-manager ${GREEN}project${NC} expires -> "
 oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
 echo "---------------------"
 
 echo -e "\n"
 echo "################################"
 echo  "##### Kube Scheduler"
-echo -en "kube-scheduler-client-cert-key ${GREEN}secret${NC} in openshift-kube-scheduler project expires -> "
+echo -en "kube-scheduler-client-cert-key ${GREEN}secret${NC} in openshift-kube-scheduler ${GREEN}project${NC} expires -> "
 oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-echo -en "serving-cert ${GREEN}secret${NC} in openshift-kube-scheduler project expires -> "
+echo -en "serving-cert ${GREEN}secret${NC} in openshift-kube-scheduler ${GREEN}project${NC} expires -> "
 oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
 echo "---------------------"
 
@@ -37,11 +37,11 @@ echo "################################"
 echo  "##### ETCD Certificates #####"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
   echo "----"
-  echo -en "etcd-peer-$master ${GREEN}secret${NC} in openshift-etcd project expires ->  "
+  echo -en "etcd-peer-$master ${GREEN}secret${NC} in openshift-etcd ${GREEN}project${NC} expires ->  "
   oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-  echo -en "etcd-serving-$master ${GREEN}secret${NC} in openshift-etcd project expires ->  "
+  echo -en "etcd-serving-$master ${GREEN}secret${NC} in openshift-etcd ${GREEN}project${NC} expires ->  "
   oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
-  echo -en "etcd-serving-metrics-$master ${GREEN}secret${NC} in openshift-etcd project expires ->  "
+  echo -en "etcd-serving-metrics-$master ${GREEN}secret${NC} in openshift-etcd ${GREEN}project${NC} expires ->  "
   oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
 done
 echo "---------------------"
@@ -62,6 +62,6 @@ echo "---------------------------------------"
 echo -e "\n"
 echo "################################"
 echo  "##### Ingress Certificates #####"
-echo -en "router-certs-default ${GREEN}secret${NC} in openshift-ingress project expires ->  "
+echo -en "router-certs-default ${GREEN}secret${NC} in openshift-ingress ${GREEN}project${NC} expires ->  "
 oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
 echo "---------------------"
