@@ -51,7 +51,7 @@ echo "################################"
 echo  -e "##### ${GREEN}Node Certificates${NC} #####"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
   #echo "## Node: $node";
-  echo "------------- ${GREEN}node: $node${NC} -------------"
+  echo -e "------------- ${GREEN}node: $node${NC} -------------"
   echo -en "kubelet-client-current ${RED}expires${NC} ->  "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate -dateopt iso_8601
   echo -en "kubelet-server-current ${RED}expires${NC} ->  "
