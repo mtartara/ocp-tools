@@ -4,19 +4,19 @@
 
 echo "################################"
 echo "##### API"
-echo "## External API" 
+echo -en "external-loadbalancer-serving-certkey secret in openshift-kube-apiserver project --> "
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate
 echo "---------------------"
-echo "## Internal API"
+echo -en "internal-loadbalancer-serving-certkey secret in openshift-kube-apiserver project --> "
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate
 
 echo ""
 echo "################################"
 echo  "##### Kube Controller Manager"
-echo "## Client certificate"
+echo -en "kube-scheduler-client-cert-key secret in openshift-kube-controller-manager project --> "
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate
 echo "---------------------"
-echo "## Server certificate"
+echo -en "serving-cert secret in openshift-kube-controller-manager project --> "
 oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate
 
 echo ""
@@ -51,6 +51,6 @@ for node in $(oc get nodes -oname|cut -d/ -f2); do
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate
   echo -en "kubelet-server-current  -->  "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -enddate
-  echo -e "---------------------\n"
+  echo -e "\n"
 done
 
