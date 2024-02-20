@@ -41,7 +41,7 @@ done
 
 echo "################################"
 echo "##### Node Certificates"
-for node in $(oc get nodes -oname |cut -d/ -f2); do
+for node in $(oc get nodes -oname); do
   echo "## Node: $node";
   echo "# kubelet-client-current";
   oc debug -q "$node" -- chroot /host openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -dates
