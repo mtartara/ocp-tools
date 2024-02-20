@@ -1,5 +1,4 @@
 #!/bin/bash
-GREEN='\033[0;32m'
 
 # https://access.redhat.com/solutions/5925951
 
