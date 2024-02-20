@@ -38,3 +38,14 @@ for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ 
   oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -dates;
   echo "---------------------";
 done
+
+echo "################################"
+echo "##### Node Certificates"
+for node in $(oc get nodes -oname |cut -d/ -f2); do
+  echo "## Node: $node";
+  echo "# kubelet-client-current";
+  oc debug -q "$node" -- chroot /host openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -dates
+  echo "# kubelet-server-current";
+  oc debug -q "$node" -- chroot /host openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -dates
+  echo "---------------------";
+done
