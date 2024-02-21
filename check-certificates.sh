@@ -2,6 +2,9 @@
 # shellcheck disable=SC2029
 # shellcheck disable=SC2206
 # https://access.redhat.com/solutions/5925951
+#
+# Author Matteo Tartara
+#
 
 # Default Missing Days before CERTS expire
 DAYS_NUMBER=15
@@ -38,6 +41,7 @@ while getopts ${OPTSTRING} opt; do
       ;;
     t)
       CHECK_TYPE=$OPTARG
+      IFS="," read -ra array <<< "$CHECK_TYPE"
       ;;
     h)
       usage
@@ -51,7 +55,6 @@ while getopts ${OPTSTRING} opt; do
   esac
 done
 
-#echo "$CHECK_TYPE"
 
 function show_cert() {
   ## - Do not use `openssl x509 -in` command which can only handle first cert in a given input
@@ -181,8 +184,6 @@ function all(){
   ca
   nodes
 }
-
-IFS="," read -ra array <<< "$CHECK_TYPE"
 
 for element in "${array[@]}"; do
   $element
