@@ -19,7 +19,7 @@ function usage(){
     pattern                         host pattern
     -d,                             To set the missing DAYS to check before Certificates EXPIRES. (Default $DAYS_NUMBER Days)
     -t,                             The type of check that you want. [api,kube-controller,kube-scheduler,etcd,ca,ingress,nodes,all] (Default $CHECK_TYPE)
-    -h, --help                      Show this help message and exit.
+    -h,                             Show this help message and exit.
     ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
     "
 }
@@ -32,7 +32,7 @@ BLUE='\033[1;34m'
 YELLOW='\033[0;33m'
 
 
-OPTSTRING=":d:t:h:"
+OPTSTRING=":d:t:h"
 
 while getopts ${OPTSTRING} opt; do
   case ${opt} in
