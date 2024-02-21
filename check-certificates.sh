@@ -78,7 +78,7 @@ function show_cert() {
   fi
 }
 
-function api_cert() {
+function api() {
   echo "################################"
   echo -e "##### ${BLUE}API${NC} #####"
   echo -e "--> The serving cert and key pair used by both internal and external API are stored inside the secrets in the namespace openshift-kube-apiserver."
@@ -89,7 +89,7 @@ function api_cert() {
   echo "---------------------"
 }
 
-function controller_cert(){
+function kube-controller(){
   echo -e "\n"
   echo "################################"
   echo -e "##### ${BLUE}Kube Controller Manager${NC} #####"
@@ -100,7 +100,7 @@ function controller_cert(){
   echo "---------------------"
 }
 
-function scheduler_cert(){
+function kube-scheduler(){
   echo -e "\n"
   echo "################################"
   echo  -e "##### ${BLUE}Kube Scheduler${NC} #####"
@@ -111,7 +111,7 @@ function scheduler_cert(){
   echo "---------------------"
 }
 
-function etcd_cert(){
+function etcd(){
   echo -e "\n"
   echo "################################"
   echo  -e "##### ${BLUE}ETCD certificates${NC} #####"
@@ -133,7 +133,7 @@ function etcd_cert(){
   echo "---------------------"
 }
 
-function ingress_cert(){
+function ingress(){
 echo -e "\n"
 echo "################################"
 echo -e "##### ${BLUE}Ingress certificates${NC} #####"
@@ -144,7 +144,7 @@ oc get secrets/router-certs-default -n openshift-ingress -o template='{{index .d
 echo "---------------------"
 }
 
-function ca_cert(){
+function ca(){
 echo -e "\n"
 echo "################################"
 echo -e "##### ${BLUE}Service-signer certificates${NC} #####"
@@ -154,7 +154,7 @@ oc get secrets/signing-key -n openshift-service-ca -o template='{{index .data "t
 echo "---------------------"
 }
 
-function nodes_cert(){
+function nodes(){
 echo -e "\n"
 echo "################################"
 echo -e "##### ${BLUE}Node Certificates${NC} #####"
@@ -172,3 +172,18 @@ done
 echo "---------------------------------------"
 }
 
+function all(){
+  api
+  kube-controller
+  kube-scheduler
+  etcd
+  ingress
+  ca
+  nodes
+}
+
+if [ "$CHECK_TYPE" == "all" ]; then
+  all
+elif [ "$CHECK_TYPE" == "api" ]; then
+  api
+fi
