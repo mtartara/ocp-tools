@@ -3,13 +3,16 @@
 # shellcheck disable=SC2206
 # https://access.redhat.com/solutions/5925951
 
+# Default Missing Days before CERTS expire
+DAYS_NUMBER=15
+
 function usage(){
     echo "Script Version 1.0
     usage: check-certificates.sh [-e] [-h]
 
     Optional arguments:
     pattern                         host pattern
-    -e,                             To set the missing DAYS to check before Certificates EXPIRES (Default 60 Days)
+    -e,                             To set the missing DAYS to check before Certificates EXPIRES (Default $DAYS_NUMBER Days)
     -h, --help                      Show this help message and exit
     ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
     "
@@ -19,9 +22,6 @@ function usage(){
 RED='\033[0;31m' # RED
 NC='\033[0m' # No Color
 GREEN='\033[0;32m'
-
-# Default Missing Days before CERTS expire
-DAYS_NUMBER=30
 
 # Set Optional arguments if present
 if [ "$1" != "" ]; then
