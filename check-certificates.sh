@@ -8,13 +8,16 @@ DAYS_NUMBER=15
 
 FILE_PATH=$(pwd)
 
+CHECK_TYPE="all"
+
 function usage(){
     echo "Script Version 1.0
-    usage: check-certificates.sh [-e] [-o] [-h]
+    usage: check-certificates.sh [-d] [-o] [-h]
 
     Optional arguments:
     pattern                         host pattern
-    -e,                             To set the missing DAYS to check before Certificates EXPIRES (Default $DAYS_NUMBER Days).
+    -d,                             To set the missing DAYS to check before Certificates EXPIRES (Default $DAYS_NUMBER Days).
+    -t,                             The type of check that you want. [api,kube-controller,kube-scheduler,etcd,ca,ingress,nodes,all]
     -o,                             Add path to write into file.
     -h, --help                      Show this help message and exit.
     ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -32,12 +35,14 @@ BLUE='\033[1;34m'
 if [ "$1" != "" ]; then
     while [ "$1" != "" ]; do
       case $1 in
-          -e )                    [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$1
+          -d )                    [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$1
+                                  ;;
+          -o )                    FILE_PATH=$1
+                                  ;;
+          -t )                    CHECK_TYPE=$1
                                   ;;
           -h | --help )           usage
                                   exit
-                                  ;;
-          -o )                    FILE_PATH=$1
                                   ;;
           * )                     usage
                                   echo -e "Error for args: $1\n"
