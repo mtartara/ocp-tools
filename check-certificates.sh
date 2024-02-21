@@ -35,16 +35,16 @@ OPTSTRING=":ab"
 
 while getopts ${OPTSTRING} opt; do
   case ${opt} in
-    d)
+    -d)
       [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$OPTARG
       ;;
-    o)
+    -o)
       FILE_PATH=$OPTARG
       ;;
-    t)
+    -t)
       CHECK_TYPE=$OPTARG
       ;;
-    h)
+    -h)
       usage
       exit
       ;;
