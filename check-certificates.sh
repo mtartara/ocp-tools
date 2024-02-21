@@ -6,14 +6,17 @@
 # Default Missing Days before CERTS expire
 DAYS_NUMBER=15
 
+FILE_PATH=$(pwd)
+
 function usage(){
     echo "Script Version 1.0
-    usage: check-certificates.sh [-e] [-h]
+    usage: check-certificates.sh [-e] [-o] [-h]
 
     Optional arguments:
     pattern                         host pattern
-    -e,                             To set the missing DAYS to check before Certificates EXPIRES (Default $DAYS_NUMBER Days)
-    -h, --help                      Show this help message and exit
+    -e,                             To set the missing DAYS to check before Certificates EXPIRES (Default $DAYS_NUMBER Days).
+    -o,                             Add path to write into file.
+    -h, --help                      Show this help message and exit.
     ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
     "
 }
@@ -33,6 +36,8 @@ if [ "$1" != "" ]; then
                                   ;;
           -h | --help )           usage
                                   exit
+                                  ;;
+          -o )                    FILE_PATH=$1
                                   ;;
           * )                     usage
                                   echo -e "Error for args: $1\n"
