@@ -186,4 +186,16 @@ if [ "$CHECK_TYPE" == "all" ]; then
   all
 elif [ "$CHECK_TYPE" == "api" ]; then
   api
+elif [ "$CHECK_TYPE" == "kube-controller" ]; then
+  kube-controller
+elif [ "$CHECK_TYPE" == "kube-scheduler" ]; then
+  kube-scheduler
+elif [ "$CHECK_TYPE" == "etcd" ]; then
+  etcd
+elif [ "$CHECK_TYPE" == "ingress" ]; then
+  ingress
+elif [ "$CHECK_TYPE" == "ca" ]; then
+  ca
+elif [ "$CHECK_TYPE" == "nodes" ]; then
+  nodes
 fi
