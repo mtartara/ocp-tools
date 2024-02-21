@@ -28,7 +28,6 @@ GREEN='\033[0;32m'
 BLUE='\033[1;34m'
 
 
-
 OPTSTRING=":d:t:h:"
 
 while getopts ${OPTSTRING} opt; do
@@ -180,6 +179,12 @@ function all(){
   ca
   nodes
 }
+
+while IFS=',' read -r check_name
+do
+  echo "$check_name"
+done < "$CHECK_TYPE"
+exit
 
 if [ "$CHECK_TYPE" = "all" ]; then
   all
