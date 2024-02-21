@@ -60,27 +60,27 @@ function show_cert() {
 
 echo "################################"
 echo -e "##### ${GREEN}API${NC} #####"
-echo -en "${BLUE}SECRET${NC}: external-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver ${BLUE}EXPIRES${NC} --> "
+echo -en "${BLUE}SECRET${NC}: external-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC}"
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-echo -en "SECRET: internal-loadbalancer-serving-certkey in PROJECT: openshift-kube-apiserver EXPIRES --> "
+echo -en "${BLUE}SECRET${NC}: internal-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC}"
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo "---------------------"
 
 echo -e "\n"
 echo "################################"
 echo -e "##### ${GREEN}Kube Controller Manager${NC} #####"
-echo -en "kube-scheduler-client-cert-key secret in openshift-kube-controller-manager project ${RED}expires${NC} --> "
+echo -en "${BLUE}SECRET${NC}: kube-scheduler-client-cert-key in ${BLUE}PROJECT${NC}: openshift-kube-controller-manager --> ${BLUE}EXPIRES${NC}"
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-echo -en "serving-cert secret in openshift-kube-controller-manager project ${RED}expires${NC} --> "
+echo -en "${BLUE}SECRET${NC}: serving-cert in ${BLUE}PROJECT${NC}: openshift-kube-controller-manager --> ${BLUE}EXPIRES${NC}"
 oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo "---------------------"
 
 echo -e "\n"
 echo "################################"
 echo  -e "##### ${GREEN}Kube Scheduler${NC} #####"
-echo -en "kube-scheduler-client-cert-key secret in openshift-kube-scheduler project ${RED}expires${NC} --> "
+echo -en "${BLUE}SECRET${NC}: kube-scheduler-client-cert-key in ${BLUE}PROJECT${NC}: openshift-kube-scheduler --> ${BLUE}EXPIRES${NC}"
 oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-echo -en "serving-cert secret in openshift-kube-scheduler project ${RED}expires${NC} --> "
+echo -en "${BLUE}SECRET${NC}: serving-cert in ${BLUE}PROJECT${NC}: openshift-kube-scheduler --> ${BLUE}EXPIRES${NC}"
 oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo "---------------------"
 
@@ -89,11 +89,11 @@ echo "################################"
 echo  -e "##### ${GREEN}ETCD Certificates${NC} #####"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
   echo "----"
-  echo -en "etcd-peer-$master secret in openshift-etcd project ${RED}expires${NC} -->  "
+  echo -en "${BLUE}SECRET${NC}: etcd-peer-$master in ${BLUE}PROJECT${NC}: openshift-etcd --> ${BLUE}EXPIRES${NC} "
   oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-  echo -en "etcd-serving-$master secret in openshift-etcd project ${RED}expires${NC} -->  "
+  echo -en "${BLUE}SECRET${NC}: etcd-serving-$master in ${BLUE}PROJECT${NC}: openshift-etcd --> ${BLUE}EXPIRES${NC} "
   oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-  echo -en "etcd-serving-metrics-$master secret in openshift-etcd project ${RED}expires${NC} -->  "
+  echo -en "${BLUE}SECRET${NC}: etcd-serving-metrics-$master in ${BLUE}PROJECT${NC}: openshift-etcd --> ${BLUE}EXPIRES${NC} "
   oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 done
 echo "---------------------"
@@ -101,7 +101,7 @@ echo "---------------------"
 echo -e "\n"
 echo "################################"
 echo  -e "##### ${GREEN}Ingress Certificates${NC} #####"
-echo -en "router-certs-default secret in openshift-ingress project ${RED}expires${NC} -->  "
+echo -en "${BLUE}SECRET${NC}: router-certs-default in ${BLUE}PROJECT${NC}: openshift-ingress --> ${BLUE}EXPIRES${NC} "
 oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | show_cert
 echo "---------------------"
 
