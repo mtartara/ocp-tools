@@ -18,8 +18,7 @@ function show_cert() {
     echo -ne "${NC}"
   else
     echo -ne "${RED}"
-    echo "${CERT_VALIDITY}"
-    echo "--------------------------- EXPIRED within ${DAYS_NUMBER} DAYS ---------------------------"
+    echo -e "${CERT_VALIDITY} within ${DAYS_NUMBER} days"
     echo -ne "${NC}"
   fi
 }
