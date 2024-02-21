@@ -31,30 +31,28 @@ GREEN='\033[0;32m'
 BLUE='\033[1;34m'
 
 
-OPTSTRING=":-d:-o:-t:-h:"
+
+OPTSTRING=":d:o:t:"
 
 while getopts ${OPTSTRING} opt; do
   case ${opt} in
-    -d)
-      [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$OPTARG
+    d)
+      echo "Option -x was triggered, Argument: ${OPTARG}"
       ;;
-    -o)
-      FILE_PATH=$OPTARG
+    o)
+      echo "Option -y was triggered, Argument: ${OPTARG}"
       ;;
-    -t)
-      CHECK_TYPE=$OPTARG
+    t)
+      echo "Option -${OPTARG} requires an argument."
+      exit 1
       ;;
-    -h)
-      usage
-      exit
-      ;;
-    *)
-      usage
-      echo -e "Error for args: $OPTARG\n"
+    ?)
+      echo "Invalid option: -${OPTARG}."
       exit 1
       ;;
   esac
 done
+
 echo "$OPTARG"
 echo "$FILE_PATH"
 echo "$CHECK_TYPE"
