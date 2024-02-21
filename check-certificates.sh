@@ -50,7 +50,7 @@ while getopts ${OPTSTRING} opt; do
   esac
 done
 
-echo "$CHECK_TYPE"
+#echo "$CHECK_TYPE"
 
 function show_cert() {
   ## - Do not use `openssl x509 -in` command which can only handle first cert in a given input
