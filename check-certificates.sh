@@ -60,7 +60,7 @@ function show_cert() {
 }
 
 echo "################################"
-echo -e "##### ${GREEN}API${NC} #####"
+echo -e "##### ${BLUE}API${NC} #####"
 echo -en "${BLUE}SECRET${NC}: external-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC} "
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo -en "${BLUE}SECRET${NC}: internal-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC} "
@@ -78,7 +78,7 @@ echo "---------------------"
 
 echo -e "\n"
 echo "################################"
-echo  -e "##### ${GREEN}Kube Scheduler${NC} #####"
+echo  -e "##### ${BLUE}Kube Scheduler${NC} #####"
 echo -en "${BLUE}SECRET${NC}: kube-scheduler-client-cert-key in ${BLUE}PROJECT${NC}: openshift-kube-scheduler --> ${BLUE}EXPIRES${NC} "
 oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo -en "${BLUE}SECRET${NC}: serving-cert in ${BLUE}PROJECT${NC}: openshift-kube-scheduler --> ${BLUE}EXPIRES${NC} "
@@ -87,7 +87,7 @@ echo "---------------------"
 
 echo -e "\n"
 echo "################################"
-echo  -e "##### ${GREEN}ETCD Certificates${NC} #####"
+echo  -e "##### ${BLUE}ETCD Certificates${NC} #####"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
   echo "----"
   echo -en "${BLUE}SECRET${NC}: etcd-peer-$master in ${BLUE}PROJECT${NC}: openshift-etcd --> ${BLUE}EXPIRES${NC} "
@@ -101,20 +101,20 @@ echo "---------------------"
 
 echo -e "\n"
 echo "################################"
-echo  -e "##### ${GREEN}Ingress Certificates${NC} #####"
+echo  -e "##### ${BLUE}Ingress Certificates${NC} #####"
 echo -en "${BLUE}SECRET${NC}: router-certs-default in ${BLUE}PROJECT${NC}: openshift-ingress --> ${BLUE}EXPIRES${NC} "
 oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | show_cert
 echo "---------------------"
 
 echo -e "\n"
 echo "################################"
-echo  -e "##### ${GREEN}Node Certificates${NC} #####"
+echo  -e "##### ${BLUE}Node Certificates${NC} #####"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
   #echo "## Node: $node";
-  echo -e "------------- ${GREEN}node: $node${NC} -------------"
-  echo -en "kubelet-client-current --> ${BLUE}EXPIRES${NC} "
+  echo -e "------------- ${BLUE}node: $node${NC} -------------"
+  echo -en "${BLUE}CERTIFICATE${NC}: kubelet-client-current --> ${BLUE}EXPIRES${NC} "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-client-current.pem | show_cert
-  echo -en "kubelet-server-current --> ${BLUE}EXPIRES${NC} "
+  echo -en "${BLUE}CERTIFICATE${NC}: kubelet-server-current --> ${BLUE}EXPIRES${NC} "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-server-current.pem | show_cert
 done
 echo "---------------------------------------"
