@@ -26,7 +26,7 @@ RED='\033[0;31m' # RED
 NC='\033[0m' # No Color
 GREEN='\033[0;32m'
 BLUE='\033[1;34m'
-YELLOW='\033[1;33m'
+YELLOW='\e[2m\033[1;33m'
 
 
 OPTSTRING=":d:t:h:"
@@ -73,9 +73,9 @@ function show_cert() {
 function api() {
   echo "################################"
   echo -e "##### ${BLUE}API${NC} #####"
-  echo -e "${YELLOW}"
+  echo -ne "${YELLOW}"
   echo "# The serving cert and key pair used by both internal and external API are stored inside the secrets in the namespace openshift-kube-apiserver."
-  echo -e "${NC}"
+  echo -ne "${NC}"
   echo -en "${BLUE}PROJECT${NC}: openshift-kube-apiserver ${BLUE}SECRET${NC}: external-loadbalancer-serving-certkey --> ${BLUE}EXPIRES${NC} "
   oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
   echo -en "${BLUE}PROJECT${NC}: openshift-kube-apiserver ${BLUE}SECRET${NC}: internal-loadbalancer-serving-certkey --> ${BLUE}EXPIRES${NC} "
@@ -109,11 +109,11 @@ function etcd(){
   echo
   echo "################################"
   echo  -e "##### ${BLUE}ETCD certificates${NC} #####"
-  echo -e "${YELLOW}"
+  echo -ne "${YELLOW}"
   echo "# The etcd-peer certificate is used for the etcd peer-to-peer communication."
   echo "# The etcd-serving certificate is used as the serving certificate by each etcd host."
   echo "# The etcd-serving-metrics certificate is used for getting the etcd metrics."
-  echo -e "${NC}"
+  echo -ne "${NC}"
   for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
     echo -en "${BLUE}PROJECT${NC}: openshift-etcd ${BLUE}SECRET${NC}: etcd-peer-$master --> ${BLUE}EXPIRES${NC} "
     #oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
@@ -144,9 +144,9 @@ function ca(){
   echo
   echo "################################"
   echo -e "##### ${BLUE}Service-signer certificates${NC} #####"
-  echo -e "${YELLOW}"
+  echo -ne "${YELLOW}"
   echo "# Service serving certificates are signed by the service-CA and has a validty of 2 years by default."
-  echo -e "${NC}"
+  echo -ne "${NC}"
   echo -en "${BLUE}PROJECT${NC}: openshift-ingress ${BLUE}SECRET${NC}: router-certs-default --> ${BLUE}EXPIRES${NC} "
   oc get secrets/signing-key -n openshift-service-ca -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
   echo "---------------------"
@@ -156,11 +156,11 @@ function nodes(){
   echo
   echo "################################"
   echo -e "##### ${BLUE}Node Certificates${NC} #####"
-  echo -e "${YELLOW}"
+  echo -ne "${YELLOW}"
   echo "# kubelet-client-current.pem = Which is used as the kubelet client cert."
   echo "# kubelet-server-current.pem = Which is used as the kubelet server cert."
   echo "# There are other PEM files that are already rotated certs and also the symlinks of the above 2 certs."
-  echo -e "${NC}"
+  echo -ne "${NC}"
   for node in $(oc get nodes -oname|cut -d/ -f2); do
     #echo "## Node: $node";
     echo -e "------------- node: ${BLUE}$node${NC} -------------"
