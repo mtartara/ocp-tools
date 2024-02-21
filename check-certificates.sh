@@ -58,7 +58,7 @@ function show_cert() {
 
 echo "################################"
 echo -e "##### ${GREEN}API${NC} #####"
-echo -en "external-loadbalancer-serving-certkey secret in openshift-kube-apiserver project ${RED}expires${NC} --> "
+echo -en "SECRET: external-loadbalancer-serving-certkey in PROJECT: openshift-kube-apiserver EXPIRES --> "
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo -en "internal-loadbalancer-serving-certkey secret in openshift-kube-apiserver project ${RED}expires${NC} --> "
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
