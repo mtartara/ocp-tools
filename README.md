@@ -1,6 +1,6 @@
 # ocp-tools
 
-### check-certificates.sh
+### certificate/check-certificates.sh
 
 This script checks the default certificates created by openshift/kubernetes.
 
