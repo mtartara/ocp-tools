@@ -57,7 +57,7 @@ while getopts ${OPTSTRING} opt; do
   esac
 done
 
-echo "$OPTARG"
+echo "$DAYS_NUMBER"
 echo "$FILE_PATH"
 echo "$CHECK_TYPE"
 
