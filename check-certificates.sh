@@ -31,7 +31,7 @@ GREEN='\033[0;32m'
 BLUE='\033[1;34m'
 
 
-OPTSTRING=":-d:-o:-t:-h"
+OPTSTRING=":-d:-o:-t:-h:"
 
 while getopts ${OPTSTRING} opt; do
   case ${opt} in
