@@ -37,17 +37,21 @@ OPTSTRING=":d:o:t:"
 while getopts ${OPTSTRING} opt; do
   case ${opt} in
     d)
-      echo "Option -x was triggered, Argument: ${OPTARG}"
+      [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$OPTARG
       ;;
     o)
-      echo "Option -y was triggered, Argument: ${OPTARG}"
+      FILE_PATH=$OPTARG
       ;;
     t)
-      echo "Option -${OPTARG} requires an argument."
-      exit 1
+      CHECK_TYPE=$OPTARG
       ;;
-    ?)
+    h)
+      usage
+      exit
+      ;;
+    *)
       echo "Invalid option: -${OPTARG}."
+      usage
       exit 1
       ;;
   esac
