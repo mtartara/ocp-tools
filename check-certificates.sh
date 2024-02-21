@@ -57,10 +57,6 @@ while getopts ${OPTSTRING} opt; do
   esac
 done
 
-echo "$DAYS_NUMBER"
-echo "$FILE_PATH"
-echo "$CHECK_TYPE"
-
 function show_cert() {
   ## - Do not use `openssl x509 -in` command which can only handle first cert in a given input
   CERT_VALIDITY=$(openssl crl2pkcs7 -nocrl -certfile /dev/stdin | openssl pkcs7 -print_certs -text \
