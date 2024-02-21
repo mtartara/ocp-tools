@@ -187,9 +187,9 @@ function all(){
 
 if [[ "$CHECK_TYPE" = *'all'* ]]; then
   all
-elif [[ "$CHECK_TYPE" == *'api'* ]]; then
+elif [[ "$CHECK_TYPE" = *'api'* ]]; then
   api
-elif [[ "$CHECK_TYPE" == *'kube-controller'* ]]; then
+elif [[ "$CHECK_TYPE" = *'kube-controller'* ]]; then
   kube-controller
 elif [ "$CHECK_TYPE" == "kube-scheduler" ]; then
   kube-scheduler
