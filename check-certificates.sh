@@ -48,7 +48,8 @@ function show_cert() {
 	  | openssl x509  -enddate -noout -dateopt iso_8601 -checkend $((60*60*24*DAYS_NUMBER)))
   if [ $? == 0 ]; then
     echo -ne "${GREEN}"
-    echo -e "${CERT_VALIDITY}" | xargs | awk '{print $1" "$2}'
+    echo -ne "${CERT_VALIDITY}" | xargs | awk '{printf $1" "$2}'
+    echo -e "CERTIFICATE WILL NOT EXPIRE"
     echo -ne "${NC}"
   else
     echo -ne "${RED}"
@@ -60,16 +61,16 @@ function show_cert() {
 
 echo "################################"
 echo -e "##### ${GREEN}API${NC} #####"
-echo -en "${BLUE}SECRET${NC}: external-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC}"
+echo -en "${BLUE}SECRET${NC}: external-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC} "
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-echo -en "${BLUE}SECRET${NC}: internal-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC}"
+echo -en "${BLUE}SECRET${NC}: internal-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC} "
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo "---------------------"
 
 echo -e "\n"
 echo "################################"
 echo -e "##### ${GREEN}Kube Controller Manager${NC} #####"
-echo -en "${BLUE}SECRET${NC}: kube-scheduler-client-cert-key in ${BLUE}PROJECT${NC}: openshift-kube-controller-manager --> ${BLUE}EXPIRES${NC}"
+echo -en "${BLUE}SECRET${NC}: kube-scheduler-client-cert-key in ${BLUE}PROJECT${NC}: openshift-kube-controller-manager --> ${BLUE}EXPIRES${NC} "
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo -en "${BLUE}SECRET${NC}: serving-cert in ${BLUE}PROJECT${NC}: openshift-kube-controller-manager --> ${BLUE}EXPIRES${NC}"
 oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
@@ -78,9 +79,9 @@ echo "---------------------"
 echo -e "\n"
 echo "################################"
 echo  -e "##### ${GREEN}Kube Scheduler${NC} #####"
-echo -en "${BLUE}SECRET${NC}: kube-scheduler-client-cert-key in ${BLUE}PROJECT${NC}: openshift-kube-scheduler --> ${BLUE}EXPIRES${NC}"
+echo -en "${BLUE}SECRET${NC}: kube-scheduler-client-cert-key in ${BLUE}PROJECT${NC}: openshift-kube-scheduler --> ${BLUE}EXPIRES${NC} "
 oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-echo -en "${BLUE}SECRET${NC}: serving-cert in ${BLUE}PROJECT${NC}: openshift-kube-scheduler --> ${BLUE}EXPIRES${NC}"
+echo -en "${BLUE}SECRET${NC}: serving-cert in ${BLUE}PROJECT${NC}: openshift-kube-scheduler --> ${BLUE}EXPIRES${NC} "
 oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo "---------------------"
 
@@ -111,10 +112,9 @@ echo  -e "##### ${GREEN}Node Certificates${NC} #####"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
   #echo "## Node: $node";
   echo -e "------------- ${GREEN}node: $node${NC} -------------"
-  echo -en "kubelet-client-current ${RED}expires${NC} -->  "
-  #ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate -dateopt iso_8601
+  echo -en "kubelet-client-current --> ${BLUE}EXPIRES${NC} "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-client-current.pem | show_cert
-  echo -en "kubelet-server-current ${RED}expires${NC} -->  "
+  echo -en "kubelet-server-current --> ${BLUE}EXPIRES${NC} "
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-server-current.pem | show_cert
 done
 echo "---------------------------------------"
