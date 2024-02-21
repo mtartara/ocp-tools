@@ -6,8 +6,6 @@
 # Default Missing Days before CERTS expire
 DAYS_NUMBER=15
 
-FILE_PATH=$(pwd)
-
 CHECK_TYPE="all"
 
 function usage(){
@@ -18,7 +16,6 @@ function usage(){
     pattern                         host pattern
     -d,                             To set the missing DAYS to check before Certificates EXPIRES. (Default $DAYS_NUMBER Days)
     -t,                             The type of check that you want. [api,kube-controller,kube-scheduler,etcd,ca,ingress,nodes,all] (Default $CHECK_TYPE)
-    -o,                             Add path to write into file. (Default $FILE_PATH).
     -h, --help                      Show this help message and exit.
     ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
     "
@@ -32,15 +29,12 @@ BLUE='\033[1;34m'
 
 
 
-OPTSTRING=":d:o:t:h:"
+OPTSTRING=":d:t:h:"
 
 while getopts ${OPTSTRING} opt; do
   case ${opt} in
     d)
       [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$OPTARG
-      ;;
-    o)
-      FILE_PATH=$OPTARG
       ;;
     t)
       CHECK_TYPE=$OPTARG
@@ -136,45 +130,45 @@ function etcd(){
 }
 
 function ingress(){
-echo -e "\n"
-echo "################################"
-echo -e "##### ${BLUE}Ingress certificates${NC} #####"
-echo -e "--> Used by the ingress router and all the secured routes are using this cert, unless a cert-key pair is explicitly provided through the route YAML."
-echo -en "${BLUE}PROJECT${NC}: openshift-ingress ${BLUE}SECRET${NC}: router-certs-default --> ${BLUE}EXPIRES${NC} "
-#oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | show_cert
-oc get secrets/router-certs-default -n openshift-ingress -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
-echo "---------------------"
-echo -e "\n"
+  echo -e "\n"
+  echo "################################"
+  echo -e "##### ${BLUE}Ingress certificates${NC} #####"
+  echo -e "--> Used by the ingress router and all the secured routes are using this cert, unless a cert-key pair is explicitly provided through the route YAML."
+  echo -en "${BLUE}PROJECT${NC}: openshift-ingress ${BLUE}SECRET${NC}: router-certs-default --> ${BLUE}EXPIRES${NC} "
+  #oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | show_cert
+  oc get secrets/router-certs-default -n openshift-ingress -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
+  echo "---------------------"
+  echo -e "\n"
 }
 
 function ca(){
-echo -e "\n"
-echo "################################"
-echo -e "##### ${BLUE}Service-signer certificates${NC} #####"
-echo -e "--> Service serving certificates are signed by the service-CA and has a validty of 2 years by default."
-echo -en "${BLUE}PROJECT${NC}: openshift-ingress ${BLUE}SECRET${NC}: router-certs-default --> ${BLUE}EXPIRES${NC} "
-oc get secrets/signing-key -n openshift-service-ca -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
-echo "---------------------"
-echo -e "\n"
+  echo -e "\n"
+  echo "################################"
+  echo -e "##### ${BLUE}Service-signer certificates${NC} #####"
+  echo -e "--> Service serving certificates are signed by the service-CA and has a validty of 2 years by default."
+  echo -en "${BLUE}PROJECT${NC}: openshift-ingress ${BLUE}SECRET${NC}: router-certs-default --> ${BLUE}EXPIRES${NC} "
+  oc get secrets/signing-key -n openshift-service-ca -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
+  echo "---------------------"
+  echo -e "\n"
 }
 
 function nodes(){
-echo -e "\n"
-echo "################################"
-echo -e "##### ${BLUE}Node Certificates${NC} #####"
-echo -e "--> kubelet-client-current.pem = Which is used as the kubelet client cert."
-echo -e "--> kubelet-server-current.pem = Which is used as the kubelet server cert."
-echo -e "--> There are other PEM files that are already rotated certs and also the symlinks of the above 2 certs."
-for node in $(oc get nodes -oname|cut -d/ -f2); do
-  #echo "## Node: $node";
-  echo -e "------------- node: ${BLUE}$node${NC} -------------"
-  echo -en "${BLUE}CERTIFICATE${NC}: kubelet-client-current --> ${BLUE}EXPIRES${NC} "
-  ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-client-current.pem | show_cert
-  echo -en "${BLUE}CERTIFICATE${NC}: kubelet-server-current --> ${BLUE}EXPIRES${NC} "
-  ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-server-current.pem | show_cert
-done
-echo "---------------------------------------"
-echo -e "\n"
+  echo -e "\n"
+  echo "################################"
+  echo -e "##### ${BLUE}Node Certificates${NC} #####"
+  echo -e "--> kubelet-client-current.pem = Which is used as the kubelet client cert."
+  echo -e "--> kubelet-server-current.pem = Which is used as the kubelet server cert."
+  echo -e "--> There are other PEM files that are already rotated certs and also the symlinks of the above 2 certs."
+  for node in $(oc get nodes -oname|cut -d/ -f2); do
+    #echo "## Node: $node";
+    echo -e "------------- node: ${BLUE}$node${NC} -------------"
+    echo -en "${BLUE}CERTIFICATE${NC}: kubelet-client-current --> ${BLUE}EXPIRES${NC} "
+    ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-client-current.pem | show_cert
+    echo -en "${BLUE}CERTIFICATE${NC}: kubelet-server-current --> ${BLUE}EXPIRES${NC} "
+    ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-server-current.pem | show_cert
+  done
+  echo "---------------------------------------"
+  echo -e "\n"
 }
 
 function all(){
