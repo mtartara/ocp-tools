@@ -93,7 +93,6 @@ echo -e "--> The etcd-peer certificate is used for the etcd peer-to-peer communi
 echo -e "--> The etcd-serving certificate is used as the serving certificate by each etcd host."
 echo -e "--> The etcd-serving-metrics certificate is used for getting the etcd metrics."
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
-  echo "----"
   echo -en "${BLUE}PROJECT${NC}: openshift-etcd ${BLUE}SECRET${NC}: etcd-peer-$master --> ${BLUE}EXPIRES${NC} "
   #oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
   oc get -n openshift-etcd secret etcd-peer-"$master" -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
@@ -103,6 +102,7 @@ for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ 
   echo -en "${BLUE}PROJECT${NC}: openshift-etcd ${BLUE}SECRET${NC}: etcd-serving-metrics-$master --> ${BLUE}EXPIRES${NC} "
   #oc get -n openshift-etcd secrets/etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
   oc get -n openshift-etcd secrets/etcd-serving-metrics-"$master" -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
+  echo "----"
 done
 echo "---------------------"
 
