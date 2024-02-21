@@ -81,7 +81,7 @@ function api() {
 }
 
 function kube-controller(){
-  echo -e "\n"
+  echo
   echo "################################"
   echo -e "##### ${BLUE}Kube Controller Manager${NC} #####"
   echo -en "${BLUE}PROJECT${NC}: openshift-kube-controller-manager ${BLUE}SECRET${NC}: kube-scheduler-client-cert-key --> ${BLUE}EXPIRES${NC} "
@@ -92,7 +92,7 @@ function kube-controller(){
 }
 
 function kube-scheduler(){
-  echo -e "\n"
+  echo
   echo "################################"
   echo  -e "##### ${BLUE}Kube Scheduler${NC} #####"
   echo -en "${BLUE}PROJECT${NC}: openshift-kube-scheduler ${BLUE}SECRET${NC}: kube-scheduler-client-cert-key --> ${BLUE}EXPIRES${NC} "
@@ -103,7 +103,7 @@ function kube-scheduler(){
 }
 
 function etcd(){
-  echo -e "\n"
+  echo
   echo "################################"
   echo  -e "##### ${BLUE}ETCD certificates${NC} #####"
   echo -e "--> The etcd-peer certificate is used for the etcd peer-to-peer communication."
@@ -125,7 +125,7 @@ function etcd(){
 }
 
 function ingress(){
-  echo -e "\n"
+  echo
   echo "################################"
   echo -e "##### ${BLUE}Ingress certificates${NC} #####"
   echo -e "--> Used by the ingress router and all the secured routes are using this cert, unless a cert-key pair is explicitly provided through the route YAML."
@@ -136,7 +136,7 @@ function ingress(){
 }
 
 function ca(){
-  echo -e "\n"
+  echo
   echo "################################"
   echo -e "##### ${BLUE}Service-signer certificates${NC} #####"
   echo -e "--> Service serving certificates are signed by the service-CA and has a validty of 2 years by default."
@@ -146,7 +146,7 @@ function ca(){
 }
 
 function nodes(){
-  echo -e "\n"
+  echo
   echo "################################"
   echo -e "##### ${BLUE}Node Certificates${NC} #####"
   echo -e "--> kubelet-client-current.pem = Which is used as the kubelet client cert."
