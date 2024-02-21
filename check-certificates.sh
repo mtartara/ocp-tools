@@ -31,26 +31,33 @@ GREEN='\033[0;32m'
 BLUE='\033[1;34m'
 
 
-# Set Optional arguments if present
-if [ "$1" != "" ]; then
-    while [ "$1" != "" ]; do
-      case $1 in
-          -d )                    [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$1
-                                  ;;
-          -o )                    FILE_PATH=$1
-                                  ;;
-          -t )                    CHECK_TYPE=$1
-                                  ;;
-          -h | --help )           usage
-                                  exit
-                                  ;;
-          * )                     usage
-                                  echo -e "Error for args: $1\n"
-                                  exit 1
-      esac
-      shift
-    done
-fi
+OPTSTRING=":ab"
+
+while getopts ${OPTSTRING} opt; do
+  case ${opt} in
+    d)
+      [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$OPTARG
+      ;;
+    o)
+      FILE_PATH=$OPTARG
+      ;;
+    t)
+      CHECK_TYPE=$OPTARG
+      ;;
+    h)
+      usage
+      exit
+      ;;
+    *)
+      usage
+      echo -e "Error for args: $OPTARG\n"
+      exit 1
+      ;;
+  esac
+done
+
+echo "$FILE_PATH"
+echo "$CHECK_TYPE"
 
 function show_cert() {
   ## - Do not use `openssl x509 -in` command which can only handle first cert in a given input
