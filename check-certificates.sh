@@ -97,6 +97,13 @@ echo "---------------------"
 
 echo -e "\n"
 echo "################################"
+echo  -e "##### ${GREEN}Ingress Certificates${NC} #####"
+echo -en "router-certs-default secret in openshift-ingress project ${RED}expires${NC} ->  "
+oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | show_cert
+echo "---------------------"
+
+echo -e "\n"
+echo "################################"
 echo  -e "##### ${GREEN}Node Certificates${NC} #####"
 for node in $(oc get nodes -oname|cut -d/ -f2); do
   #echo "## Node: $node";
@@ -108,10 +115,3 @@ for node in $(oc get nodes -oname|cut -d/ -f2); do
   ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-server-current.pem | show_cert
 done
 echo "---------------------------------------"
-
-echo -e "\n"
-echo "################################"
-echo  -e "##### ${GREEN}Ingress Certificates${NC} #####"
-echo -en "router-certs-default secret in openshift-ingress project ${RED}expires${NC} ->  "
-oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | show_cert
-echo "---------------------"
