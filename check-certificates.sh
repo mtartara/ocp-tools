@@ -55,7 +55,7 @@ while getopts ${OPTSTRING} opt; do
       ;;
   esac
 done
-
+echo "$OPTARG"
 echo "$FILE_PATH"
 echo "$CHECK_TYPE"
 
