@@ -22,7 +22,7 @@ function usage(){
 RED='\033[0;31m' # RED
 NC='\033[0m' # No Color
 GREEN='\033[0;32m'
-BLUE='\033[0;34m'
+BLUE='\033[1;34m'
 
 
 # Set Optional arguments if present
