@@ -44,9 +44,9 @@ echo -e "\n"
 echo "################################"
 echo  -e "##### ${GREEN}Kube Scheduler${NC} #####"
 echo -en "kube-scheduler-client-cert-key secret in openshift-kube-scheduler project ${RED}expires${NC} -> "
-oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+oc get secret kube-scheduler-client-cert-key -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo -en "serving-cert secret in openshift-kube-scheduler project ${RED}expires${NC} -> "
-oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo "---------------------"
 
 echo -e "\n"
@@ -55,11 +55,11 @@ echo  -e "##### ${GREEN}ETCD Certificates${NC} #####"
 for master in $(oc get nodes -oname -l "node-role.kubernetes.io/master"|cut -d/ -f2); do
   echo "----"
   echo -en "etcd-peer-$master secret in openshift-etcd project ${RED}expires${NC} ->  "
-  oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+  oc get -n openshift-etcd secret etcd-peer-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
   echo -en "etcd-serving-$master secret in openshift-etcd project ${RED}expires${NC} ->  "
-  oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+  oc get -n openshift-etcd secret etcd-serving-"$master"  -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
   echo -en "etcd-serving-metrics-$master secret in openshift-etcd project ${RED}expires${NC} ->  "
-  oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+  oc get -n openshift-etcd secret etcd-serving-metrics-"$master" -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 done
 echo "---------------------"
 
@@ -70,9 +70,10 @@ for node in $(oc get nodes -oname|cut -d/ -f2); do
   #echo "## Node: $node";
   echo -e "------------- ${GREEN}node: $node${NC} -------------"
   echo -en "kubelet-client-current ${RED}expires${NC} ->  "
-  ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate -dateopt iso_8601
+  #ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate -dateopt iso_8601
+  ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-client-current.pem | show_cert
   echo -en "kubelet-server-current ${RED}expires${NC} ->  "
-  ssh -o StrictHostKeyChecking=no "$node" -lcore sudo openssl x509 -in /var/lib/kubelet/pki/kubelet-server-current.pem -noout -enddate -dateopt iso_8601
+  ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-server-current.pem | show_cert
 done
 echo "---------------------------------------"
 
@@ -80,5 +81,5 @@ echo -e "\n"
 echo "################################"
 echo  -e "##### ${GREEN}Ingress Certificates${NC} #####"
 echo -en "router-certs-default secret in openshift-ingress project ${RED}expires${NC} ->  "
-oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | show_cert
 echo "---------------------"
