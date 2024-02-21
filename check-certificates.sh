@@ -48,7 +48,7 @@ function show_cert() {
 	  | openssl x509  -enddate -noout -dateopt iso_8601 -checkend $((60*60*24*DAYS_NUMBER)))
   if [ $? == 0 ]; then
     echo -ne "${GREEN}"
-    echo -ne "${CERT_VALIDITY}" | xargs | awk '{printf $1" "$2}'
+    echo -ne "${CERT_VALIDITY}" | xargs | awk '{printf $1" "$2"\033[0m =========> \033[0;32m"}'
     echo -e "CERTIFICATE WILL NOT EXPIRE WITHIN ${DAYS_NUMBER} DAYS"
     echo -ne "${NC}"
   else
