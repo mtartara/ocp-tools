@@ -5,11 +5,29 @@
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 GREEN='\033[0;32m'
+# Default Missing Days before CERTS expire
+DAYS_NUMBER=30
+
+function show_cert() {
+  ## - Do not use `openssl x509 -in` command which can only handle first cert in a given input
+  CERT_VALIDITY=$(openssl crl2pkcs7 -nocrl -certfile /dev/stdin | openssl pkcs7 -print_certs -text \
+    | openssl x509 -dates -noout -dateopt iso_8601 -checkend $((60*60*24*DAYS_NUMBER)))
+  if [ $? == 0 ]; then
+    echo -ne "${GREEN}"
+    echo "${CERT_VALIDITY}"
+    echo -ne "${NC}"
+  else
+    echo -ne "${RED}"
+    echo "${CERT_VALIDITY}"
+    echo "--------------------------- EXPIRED within ${DAYS_NUMBER} DAYS ---------------------------"
+    echo -ne "${NC}"
+  fi
+}
 
 echo "################################"
 echo -e "##### ${GREEN}API${NC} #####"
-echo -en "external-loadbalancer-serving-certkey$ secret in openshift-kube-apiserver project ${RED}expires${NC} -> "
-oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
+echo -en "external-loadbalancer-serving-certkey secret in openshift-kube-apiserver project ${RED}expires${NC} -> "
+oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo -en "internal-loadbalancer-serving-certkey secret in openshift-kube-apiserver project ${RED}expires${NC} -> "
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | openssl x509 -noout -enddate -dateopt iso_8601
 echo "---------------------"
