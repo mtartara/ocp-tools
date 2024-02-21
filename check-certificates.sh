@@ -61,18 +61,18 @@ function show_cert() {
 
 echo "################################"
 echo -e "##### ${BLUE}API${NC} #####"
-echo -en "${BLUE}SECRET${NC}: external-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC} "
+echo -en "${BLUE}PROJECT${NC}: openshift-kube-apiserver ${BLUE}SECRET${NC}: external-loadbalancer-serving-certkey --> ${BLUE}EXPIRES${NC} "
 oc get secret -n openshift-kube-apiserver external-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-echo -en "${BLUE}SECRET${NC}: internal-loadbalancer-serving-certkey in ${BLUE}PROJECT${NC}: openshift-kube-apiserver --> ${BLUE}EXPIRES${NC} "
+echo -en "${BLUE}PROJECT${NC}: openshift-kube-apiserver ${BLUE}SECRET${NC}: internal-loadbalancer-serving-certkey --> ${BLUE}EXPIRES${NC} "
 oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo "---------------------"
 
 echo -e "\n"
 echo "################################"
-echo -e "##### ${GREEN}Kube Controller Manager${NC} #####"
+echo -e "##### ${BLUE}Kube Controller Manager${NC} #####"
 echo -en "${BLUE}SECRET${NC}: kube-scheduler-client-cert-key in ${BLUE}PROJECT${NC}: openshift-kube-controller-manager --> ${BLUE}EXPIRES${NC} "
 oc get secret kube-controller-manager-client-cert-key -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
-echo -en "${BLUE}SECRET${NC}: serving-cert in ${BLUE}PROJECT${NC}: openshift-kube-controller-manager --> ${BLUE}EXPIRES${NC}"
+echo -en "${BLUE}SECRET${NC}: serving-cert in ${BLUE}PROJECT${NC}: openshift-kube-controller-manager --> ${BLUE}EXPIRES${NC} "
 oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
 echo "---------------------"
 
