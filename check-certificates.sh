@@ -1,12 +1,44 @@
 #!/bin/bash
-
+# shellcheck disable=SC2029
+# shellcheck disable=SC2206
 # https://access.redhat.com/solutions/5925951
 
-RED='\033[0;31m'
+function usage(){
+    echo "Script Version 1.0
+    usage: check-certificates.sh [-e] [-h]
+
+    Optional arguments:
+    pattern                         host pattern
+    -e,                             To set the missing DAYS to check before Certificates EXPIRES (Default 60 Days)
+    -h, --help                      Show this help message and exit
+    ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+    "
+}
+
+# Set Shell TEXT COLOR
+RED='\033[0;31m' # RED
 NC='\033[0m' # No Color
 GREEN='\033[0;32m'
+
 # Default Missing Days before CERTS expire
 DAYS_NUMBER=30
+
+# Set Optional arguments if present
+if [ "$1" != "" ]; then
+    while [ "$1" != "" ]; do
+      case $1 in
+          -e )                    [[ $2 =~ ^[0-9]+$ ]] && shift && DAYS_NUMBER=$1
+                                  ;;
+          -h | --help )           usage
+                                  exit
+                                  ;;
+          * )                     usage
+                                  echo -e "Error for args: $1\n"
+                                  exit 1
+      esac
+      shift
+    done
+fi
 
 function show_cert() {
   ## - Do not use `openssl x509 -in` command which can only handle first cert in a given input
