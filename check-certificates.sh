@@ -49,7 +49,7 @@ function show_cert() {
   if [ $? == 0 ]; then
     echo -ne "${GREEN}"
     echo -ne "${CERT_VALIDITY}" | xargs | awk '{printf $1" "$2}'
-    echo -e "CERTIFICATE WILL NOT EXPIRE"
+    echo -e "CERTIFICATE WILL NOT EXPIRE WITHIN ${DAYS_NUMBER} DAYS"
     echo -ne "${NC}"
   else
     echo -ne "${RED}"
