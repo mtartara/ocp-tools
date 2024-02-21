@@ -78,7 +78,6 @@ function api() {
   echo -en "${BLUE}PROJECT${NC}: openshift-kube-apiserver ${BLUE}SECRET${NC}: internal-loadbalancer-serving-certkey --> ${BLUE}EXPIRES${NC} "
   oc get secret -n openshift-kube-apiserver internal-loadbalancer-serving-certkey -o yaml -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
   echo "---------------------"
-  echo -e "\n"
 }
 
 function kube-controller(){
@@ -90,7 +89,6 @@ function kube-controller(){
   echo -en "${BLUE}PROJECT${NC}: openshift-kube-controller-manager ${BLUE}SECRET${NC}: serving-cert --> ${BLUE}EXPIRES${NC} "
   oc get secret serving-cert -n openshift-kube-controller-manager -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
   echo "---------------------"
-  echo -e "\n"
 }
 
 function kube-scheduler(){
@@ -102,7 +100,6 @@ function kube-scheduler(){
   echo -en "${BLUE}PROJECT${NC}: openshift-kube-scheduler ${BLUE}SECRET${NC}: serving-cert --> ${BLUE}EXPIRES${NC} "
   oc get secret serving-cert -n openshift-kube-scheduler -o=custom-columns=":.data.tls\.crt" | tail -1 | base64 -d | show_cert
   echo "---------------------"
-  echo -e "\n"
 }
 
 function etcd(){
@@ -125,7 +122,6 @@ function etcd(){
     echo "----"
   done
   echo "---------------------"
-  echo -e "\n"
 }
 
 function ingress(){
@@ -137,7 +133,6 @@ function ingress(){
   #oc get secret router-certs-default  -oyaml -n openshift-ingress | grep crt | awk '{print $2}' | base64 -d | show_cert
   oc get secrets/router-certs-default -n openshift-ingress -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
   echo "---------------------"
-  echo -e "\n"
 }
 
 function ca(){
@@ -148,7 +143,6 @@ function ca(){
   echo -en "${BLUE}PROJECT${NC}: openshift-ingress ${BLUE}SECRET${NC}: router-certs-default --> ${BLUE}EXPIRES${NC} "
   oc get secrets/signing-key -n openshift-service-ca -o template='{{index .data "tls.crt"}}' | base64 -d | show_cert
   echo "---------------------"
-  echo -e "\n"
 }
 
 function nodes(){
@@ -167,7 +161,6 @@ function nodes(){
     ssh -o StrictHostKeyChecking=no "$node" -lcore sudo cat /var/lib/kubelet/pki/kubelet-server-current.pem | show_cert
   done
   echo "---------------------------------------"
-  echo -e "\n"
 }
 
 function all(){
@@ -180,26 +173,8 @@ function all(){
   nodes
 }
 
-while IFS=',' read -r check_name
-do
-  echo "$check_name"
-done < "$CHECK_TYPE"
-exit
+IFS="," read -ra array <<< "$CHECK_TYPE"
 
-if [ "$CHECK_TYPE" = "all" ]; then
-  all
-elif [ "$CHECK_TYPE" == "api" ]; then
-  api
-elif [ "$CHECK_TYPE" == "kube-controller" ]; then
-  kube-controller
-elif [ "$CHECK_TYPE" == "kube-scheduler" ]; then
-  kube-scheduler
-elif [ "$CHECK_TYPE" == "etcd" ]; then
-  etcd
-elif [ "$CHECK_TYPE" == "ingress" ]; then
-  ingress
-elif [ "$CHECK_TYPE" == "ca" ]; then
-  ca
-elif [ "$CHECK_TYPE" == "nodes" ]; then
-  nodes
-fi
+for element in "${array[@]}"; do
+  $element
+done
