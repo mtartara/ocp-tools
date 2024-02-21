@@ -41,7 +41,6 @@ while getopts ${OPTSTRING} opt; do
       ;;
     t)
       CHECK_TYPE=$OPTARG
-      IFS="," read -ra array <<< "$CHECK_TYPE"
       ;;
     h)
       usage
@@ -55,6 +54,7 @@ while getopts ${OPTSTRING} opt; do
   esac
 done
 
+IFS="," read -ra array <<< "$CHECK_TYPE"
 
 function show_cert() {
   ## - Do not use `openssl x509 -in` command which can only handle first cert in a given input
